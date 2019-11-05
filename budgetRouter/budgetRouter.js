@@ -32,7 +32,7 @@ router.post('/', (req,res)=>{
     knex('accounts')
     .insert({name: req.body.name, budget: req.body.budget})
     .then(accounts=>{
-        res.status(200).json({...req.body, ...req.body.id})
+        res.status(200).json({...req.body})
     })
     .catch(err=>{
         console.log(err)
