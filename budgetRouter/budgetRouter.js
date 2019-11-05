@@ -32,11 +32,11 @@ router.post('/', (req,res)=>{
     knex('accounts')
     .insert({name: req.body.name, budget: req.body.budget})
     .then(accounts=>{
-        res.status(200).json({...req.body})
+        res.status(200).json({...req.body, ...req.body.id})
     })
     .catch(err=>{
         console.log(err)
-        res.status(500).json({error: 'something went wrong'})
+        res.status(500).json({error: 'something went wrong, make sure a use with this name does not exist'})
     })
 })
 
@@ -54,11 +54,12 @@ router.put('/:id', (req,res)=>{
 })
 
 router.delete('/:id', (req,res)=>{
+    console.log(req.params.id)
     knex('accounts')
     .where({id: req.params.id})
     .del()
     .then(accounts=>{
-        res.status(200).json({success:"It was successfully deleted "})
+        accounts?res.status(200).json({success:`The user with the ID of ${req.params.id} was deleted`}):res.status(404).json({error:`The ID ${req.params.id} does not exist`})
     })
     .catch(err=>{
         res.status(500).json({error: "something went wrong"})
